@@ -8,123 +8,77 @@ if (($_SESSION['user']['role'] ?? null) !== 'senior') {
 }
 
 $pageTitle = 'Senior Dashboard | NearBy';
-$pageScripts = ['assets/js/senior.js'];
+$pageScripts = ['assets/js/search.js'];
 require_once __DIR__ . '/includes/header.php';
 ?>
 <div data-app-alerts>
     <div class="row align-items-center mb-4">
-        <div class="col-md-7">
-            <h1 class="h4 fw-semibold">Share your accommodation with juniors</h1>
-            <p class="text-muted small">List rooms, flats, or PGs to help junior students find safe homes near campus.</p>
+        <div class="col-lg-8">
+            <h1 class="h4 fw-semibold">Share rooms or services with the NearBy community</h1>
+            <p class="text-muted small mb-0">Publish your room availability or trusted local services so students receive help straight from seniors and local partners.</p>
         </div>
-        <div class="col-md-5">
-            <div class="glass-card p-3">
-                <p class="small text-muted mb-2">Posting tips</p>
-                <div class="d-flex flex-wrap gap-2">
-                    <span class="filter-pill">Detailed description</span>
-                    <span class="filter-pill">Verified facilities</span>
-                    <span class="filter-pill">Accurate rent</span>
-                </div>
+        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+            <div class="d-flex flex-column flex-lg-row justify-content-lg-end gap-2">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPostModal">
+                    <i class="bi bi-plus-circle me-2"></i>Create Post
+                </button>
+                <a class="btn btn-outline-light" href="search.php">
+                    <i class="bi bi-search me-2"></i>Browse Community Posts
+                </a>
             </div>
         </div>
     </div>
 
-    <div class="row g-4">
-        <div class="col-lg-7">
-            <div class="glass-card p-4">
-                <h2 class="h5 fw-semibold mb-3">Add Accommodation</h2>
-                <form id="postAccommodation" novalidate>
-                    <div class="mb-3">
-                        <label class="form-label">Title</label>
-                        <input type="text" class="form-control" name="title" placeholder="Cozy 2BHK near XYZ College" required>
-                        <div class="invalid-feedback">Provide a quick title for your listing</div>
-                    </div>
-                    <div class="row g-3">
-                        <div class="col-sm-6">
-                            <label class="form-label">Type</label>
-                            <select class="form-select" name="type" required>
-                                <option value="">Select type</option>
-                                <option value="PG">PG</option>
-                                <option value="Flat">Flat</option>
-                                <option value="Room">Room</option>
-                                <option value="Hostel">Hostel</option>
-                            </select>
-                            <div class="invalid-feedback">Pick a type</div>
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="form-label">Allowed For</label>
-                            <select class="form-select" name="allowed_for" required>
-                                <option value="">Select option</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Family">Family</option>
-                            </select>
-                            <div class="invalid-feedback">Select who can stay</div>
-                        </div>
-                    </div>
-                    <div class="row g-3 mt-1">
-                        <div class="col-sm-6">
-                            <label class="form-label">Monthly Rent (₹)</label>
-                            <input type="number" class="form-control" name="monthly_rent" min="1000" step="500" required>
-                            <div class="invalid-feedback">Rent helps juniors filter quickly</div>
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="form-label">Location</label>
-                            <input type="text" class="form-control" name="location" placeholder="Near ABC Hostel Road" required>
-                            <div class="invalid-feedback">Location is required</div>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <label class="form-label">Facilities</label>
-                        <div class="d-flex flex-wrap gap-2">
-                            <?php
-                            $facilities = ['Wi-Fi', 'Food', 'Water', 'Electricity', 'Parking', 'CCTV', 'Power Backup'];
-                            foreach ($facilities as $facility):
-                            ?>
-                                <label class="form-check form-check-inline facility-checkbox">
-                                    <input class="form-check-input" type="checkbox" name="facilities[]" value="<?= $facility ?>">
-                                    <span class="form-check-label"><?= $facility ?></span>
-                                </label>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <label class="form-label">Description</label>
-                        <textarea class="form-control" name="description" rows="4" placeholder="Share highlights, nearby places, rules, etc." required></textarea>
-                        <div class="invalid-feedback">Help juniors understand the stay better</div>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100 mt-4">Post Accommodation</button>
-                </form>
+    <div class="glass-card p-4 mb-4">
+        <h2 class="h5 fw-semibold mb-3">Before you publish</h2>
+        <ul class="list-unstyled d-grid gap-3 mb-0">
+            <li class="d-flex gap-3">
+                <span class="facility-icon"><i class="bi bi-house-heart"></i></span>
+                <div>
+                    <p class="fw-semibold mb-1">Gather complete details</p>
+                    <p class="small text-muted mb-0">Keep rent or pricing, facilities, and clear location handy so juniors can shortlist quickly.</p>
+                </div>
+            </li>
+            <li class="d-flex gap-3">
+                <span class="facility-icon"><i class="bi bi-telephone"></i></span>
+                <div>
+                    <p class="fw-semibold mb-1">Provide an active contact</p>
+                    <p class="small text-muted mb-0">Use a number you can attend; only logged-in users can see it for safety.</p>
+                </div>
+            </li>
+            <li class="d-flex gap-3">
+                <span class="facility-icon"><i class="bi bi-clipboard-check"></i></span>
+                <div>
+                    <p class="fw-semibold mb-1">Update regularly</p>
+                    <p class="small text-muted mb-0">Edit or repost when availability changes to keep the community database current.</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="glass-card p-4">
+        <h2 class="h5 fw-semibold mb-3">Posting checklist</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="h-100 border rounded-4 border-light-subtle p-3">
+                    <h3 class="h6 fw-semibold mb-2"><i class="bi bi-geo-alt me-2 text-primary"></i>Location clarity</h3>
+                    <p class="small text-muted mb-0">Mention nearby landmarks, floor details, and approach roads.</p>
+                </div>
             </div>
-        </div>
-        <div class="col-lg-5">
-            <div class="glass-card p-4 h-100">
-                <h2 class="h5 fw-semibold mb-3">Why list with NearBy?</h2>
-                <ul class="list-unstyled d-grid gap-3">
-                    <li class="d-flex gap-3">
-                        <span class="facility-icon"><i class="bi bi-lightning-charge"></i></span>
-                        <div>
-                            <p class="fw-semibold mb-1">Quick responses</p>
-                            <p class="small text-muted mb-0">Juniors can request contact instantly through NearBy.</p>
-                        </div>
-                    </li>
-                    <li class="d-flex gap-3">
-                        <span class="facility-icon"><i class="bi bi-shield-check"></i></span>
-                        <div>
-                            <p class="fw-semibold mb-1">Trusted community</p>
-                            <p class="small text-muted mb-0">Connect with your juniors and build a helpful network.</p>
-                        </div>
-                    </li>
-                    <li class="d-flex gap-3">
-                        <span class="facility-icon"><i class="bi bi-piggy-bank"></i></span>
-                        <div>
-                            <p class="fw-semibold mb-1">Manage vacancy</p>
-                            <p class="small text-muted mb-0">Keep your space occupied with respectful tenants.</p>
-                        </div>
-                    </li>
-                </ul>
+            <div class="col-md-4">
+                <div class="h-100 border rounded-4 border-light-subtle p-3">
+                    <h3 class="h6 fw-semibold mb-2"><i class="bi bi-lightbulb me-2 text-primary"></i>Highlight benefits</h3>
+                    <p class="small text-muted mb-0">Share power backup, meals, timings, or unique perks that make your listing stand out.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="h-100 border rounded-4 border-light-subtle p-3">
+                    <h3 class="h6 fw-semibold mb-2"><i class="bi bi-emoji-smile me-2 text-primary"></i>Be responsive</h3>
+                    <p class="small text-muted mb-0">Students rely on quick replies—plan a convenient time to answer calls.</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<?php include __DIR__ . '/includes/create-post-modal.php'; ?>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

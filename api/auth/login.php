@@ -31,12 +31,6 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 	exit;
 }
 
-$allowedDomain = '@mitsgwl.ac.in';
-if (!str_ends_with(strtolower($email), $allowedDomain)) {
-	echo json_encode(['success' => false, 'message' => 'Use your @mitsgwl.ac.in college email']);
-	exit;
-}
-
 if (!in_array($role, ['junior', 'senior'], true)) {
 	echo json_encode(['success' => false, 'message' => 'Invalid role']);
 	exit;
@@ -45,7 +39,7 @@ if (!in_array($role, ['junior', 'senior'], true)) {
 $conn = nearby_db_connect();
 $emailLower = strtolower($email);
 
-$sql = 'SELECT id, name, college_email, password, role FROM users WHERE college_email = ? LIMIT 1';
+$sql = 'SELECT id, name, college_email, password, role, user_type FROM users WHERE college_email = ? LIMIT 1';
 $stmt = mysqli_prepare($conn, $sql);
 mysqli_stmt_bind_param($stmt, 's', $emailLower);
 mysqli_stmt_execute($stmt);
@@ -63,10 +57,18 @@ $_SESSION['user'] = [
 	'name' => $user['name'],
 	'email' => $user['college_email'],
 	'role' => $user['role'],
+	'user_type' => $user['user_type'] ?? 'student',
 ];
+
+$redirect = 'search.php';
+if ($user['role'] === 'junior') {
+	$redirect = 'junior-dashboard.php';
+} elseif ($user['role'] === 'senior') {
+	$redirect = 'senior-dashboard.php';
+}
 
 echo json_encode([
 	'success' => true,
 	'message' => 'Login successful',
-	'redirect' => $role === 'junior' ? 'junior-dashboard.php' : 'senior-dashboard.php',
+	'redirect' => $redirect,
 ]);

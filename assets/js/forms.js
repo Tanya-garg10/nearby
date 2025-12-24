@@ -3,7 +3,7 @@ export const validateForm = (form) => {
     let isValid = true;
 
     elements.forEach(el => {
-        if (el.type === 'email') {
+        if (el.type === 'email' && el.dataset.requireMitsEmail === 'true') {
             const allowedDomain = '@mitsgwl.ac.in';
             const isCollegeEmail = el.value.toLowerCase().endsWith(allowedDomain);
             if (!isCollegeEmail) {
@@ -11,6 +11,8 @@ export const validateForm = (form) => {
             } else {
                 el.setCustomValidity('');
             }
+        } else if (el.type === 'email') {
+            el.setCustomValidity('');
         }
 
         if (!el.checkValidity()) {

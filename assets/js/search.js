@@ -1,13 +1,15 @@
-import { buildAccommodationCard, renderResults } from './ui.js';
+import { buildPostCard, renderResults } from './ui.js';
+import { validateForm } from './forms.js';
 
 const formSelectors = ['#dashboardSearch', '#advancedSearch'];
+const refreshHandlers = [];
 
-const fetchResults = async (params) => {
-    const url = new URL('api/accommodations/search.php', window.location.href);
+const fetchPosts = async (params = {}) => {
+    const url = new URL('api/posts/list.php', window.location.href);
     Object.entries(params).forEach(([key, value]) => {
         if (Array.isArray(value)) {
-            value.forEach(item => url.searchParams.append(key + '[]', item));
-        } else if (value) {
+            value.filter(Boolean).forEach(item => url.searchParams.append(`${key}[]`, item));
+        } else if (value !== '' && value !== null && value !== undefined) {
             url.searchParams.set(key, value);
         }
     });
@@ -15,9 +17,24 @@ const fetchResults = async (params) => {
     const response = await fetch(url.toString(), {headers: {'Accept': 'application/json'}});
     const data = await response.json();
     if (!data.success) {
-        throw new Error(data.message || 'Unable to fetch results');
+        throw new Error(data.message || 'Unable to fetch posts');
     }
     return data.data;
+};
+
+const buildParamsFromForm = (form) => {
+    const formData = new FormData(form);
+    const params = {};
+    formData.forEach((value, key) => {
+        if (key.endsWith('[]')) {
+            const arrayKey = key.slice(0, -2);
+            params[arrayKey] = params[arrayKey] || [];
+            params[arrayKey].push(value);
+        } else {
+            params[key] = value;
+        }
+    });
+    return params;
 };
 
 const initSearchForm = (selector) => {
@@ -26,29 +43,21 @@ const initSearchForm = (selector) => {
         return;
     }
 
-    const resultsContainer = document.querySelector('#searchResults');
+    const resultsContainer = document.querySelector(form.dataset.resultsTarget || '#searchResults');
+    if (!resultsContainer) {
+        return;
+    }
 
     const handleSearch = async () => {
-        const formData = new FormData(form);
-        const params = {};
-        formData.forEach((value, key) => {
-            if (key.endsWith('[]')) {
-                const arrayKey = key.slice(0, -2);
-                params[arrayKey] = params[arrayKey] || [];
-                params[arrayKey].push(value);
-            } else {
-                params[key] = value;
-            }
-        });
-
+        const params = buildParamsFromForm(form);
         try {
-            resultsContainer.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-success" role="status"></div><p class="text-muted small mt-2">Searching...</p></div>';
-            const results = await fetchResults(params);
+            resultsContainer.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-success" role="status"></div><p class="text-muted small mt-2">Loading fresh posts...</p></div>';
+            const results = await fetchPosts(params);
             if (!results.length) {
-                resultsContainer.innerHTML = '<div class="text-center py-5 text-muted">No accommodations match your filters yet.</div>';
+                resultsContainer.innerHTML = '<div class="text-center py-5 text-muted">No posts match your filters yet. Try adjusting the criteria.</div>';
                 return;
             }
-            renderResults(resultsContainer, results.map(buildAccommodationCard));
+            renderResults(resultsContainer, results.map(buildPostCard));
         } catch (error) {
             resultsContainer.innerHTML = '';
             NearBy.showMessage(error.message, 'danger');
@@ -64,7 +73,137 @@ const initSearchForm = (selector) => {
         setTimeout(handleSearch, 150);
     });
 
+    refreshHandlers.push(handleSearch);
     handleSearch();
 };
 
+const updateRequiredAttributes = (form, category) => {
+    const roomFields = form.querySelector('[data-room-fields]');
+    const serviceFields = form.querySelector('[data-service-fields]');
+    const roomPriceField = form.querySelector('[data-room-price]');
+    const servicePriceField = form.querySelector('[data-service-price]');
+    const accommodationField = form.querySelector('[name="accommodation_type"]');
+    const allowedForField = form.querySelector('[name="allowed_for"]');
+    const serviceTypeField = form.querySelector('[name="service_type"]');
+    const availabilityField = form.querySelector('[name="availability_time"]');
+
+    if (roomFields && serviceFields) {
+        roomFields.classList.toggle('d-none', category !== 'room');
+        serviceFields.classList.toggle('d-none', category !== 'service');
+    }
+
+    if (roomPriceField) {
+        roomPriceField.disabled = category !== 'room';
+        roomPriceField.required = category === 'room';
+        if (category !== 'room') {
+            roomPriceField.value = '';
+        }
+    }
+    if (servicePriceField) {
+        servicePriceField.disabled = category !== 'service';
+        servicePriceField.required = false;
+        if (category !== 'service') {
+            servicePriceField.value = '';
+        }
+    }
+    if (accommodationField) {
+        accommodationField.required = category === 'room';
+        accommodationField.disabled = category !== 'room';
+        if (category !== 'room') {
+            accommodationField.value = '';
+        }
+    }
+    if (allowedForField) {
+        allowedForField.required = category === 'room';
+        allowedForField.disabled = category !== 'room';
+        if (category !== 'room') {
+            allowedForField.value = '';
+        }
+    }
+    if (serviceTypeField) {
+        serviceTypeField.required = category === 'service';
+        serviceTypeField.disabled = category !== 'service';
+        if (category !== 'service') {
+            serviceTypeField.value = '';
+        }
+    }
+    if (availabilityField) {
+        availabilityField.required = category === 'service';
+        availabilityField.disabled = category !== 'service';
+        if (category !== 'service') {
+            availabilityField.value = '';
+        }
+    }
+};
+
+const initCreatePostForm = () => {
+    const form = document.querySelector('#createPostForm');
+    const modalEl = document.querySelector('#createPostModal');
+    if (!form || !modalEl) {
+        return;
+    }
+
+    const postTypeInputs = form.querySelectorAll('[name="post_category"]');
+    const facilitiesGroup = form.querySelector('[data-room-fields]');
+
+    const getSelectedCategory = () => form.querySelector('[name="post_category"]:checked')?.value || 'room';
+
+    const syncCategoryState = () => {
+        const category = getSelectedCategory();
+        updateRequiredAttributes(form, category);
+        if (category === 'service' && facilitiesGroup) {
+            facilitiesGroup.querySelectorAll('input[type="checkbox"]').forEach(input => {
+                input.checked = false;
+            });
+        }
+    };
+
+    postTypeInputs.forEach(input => {
+        input.addEventListener('change', syncCategoryState);
+    });
+
+    syncCategoryState();
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (!validateForm(form)) {
+            return;
+        }
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalLabel = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Publishing';
+
+        const formData = new FormData(form);
+        const payload = Object.fromEntries(formData.entries());
+        const facilities = formData.getAll('facilities[]');
+        if (facilities.length) {
+            payload.facilities = facilities;
+        }
+
+        try {
+            await NearBy.fetchJSON('api/posts/create.php', {method: 'POST', body: payload});
+            NearBy.showMessage('Post created successfully');
+            form.reset();
+            syncCategoryState();
+
+            if (window.bootstrap?.Modal) {
+                const Modal = window.bootstrap.Modal;
+                const modalInstance = Modal.getInstance(modalEl) || new Modal(modalEl);
+                modalInstance.hide();
+            }
+
+            refreshHandlers.forEach(handler => handler());
+        } catch (error) {
+            NearBy.showMessage(error.message, 'danger');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalLabel;
+            form.classList.remove('was-validated');
+        }
+    });
+};
+
 formSelectors.forEach(initSearchForm);
+initCreatePostForm();

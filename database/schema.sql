@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     college_email VARCHAR(160) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     role ENUM('junior', 'senior') NOT NULL,
+    user_type ENUM('student', 'owner', 'service_provider') NOT NULL DEFAULT 'student',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
@@ -22,6 +23,26 @@ CREATE TABLE IF NOT EXISTS accommodations (
     description TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_accommodations_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS posts (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    post_category ENUM('room', 'service') NOT NULL,
+    service_type ENUM('tiffin', 'gas', 'milk', 'sabji', 'other') DEFAULT NULL,
+    accommodation_type ENUM('PG', 'Flat', 'Room', 'Hostel') DEFAULT NULL,
+    allowed_for ENUM('Male', 'Female', 'Family') DEFAULT NULL,
+    rent_or_price INT UNSIGNED DEFAULT NULL,
+    location VARCHAR(255) NOT NULL,
+    facilities TEXT DEFAULT NULL,
+    availability_time VARCHAR(120) DEFAULT NULL,
+    description TEXT NOT NULL,
+    contact_phone VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_posts_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_post_category (post_category),
+    INDEX idx_post_service_type (service_type),
+    INDEX idx_post_location (location(100))
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS guidance (

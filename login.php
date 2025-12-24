@@ -11,7 +11,7 @@ require_once __DIR__ . '/includes/header.php';
                 <div class="mb-3">
                     <label for="loginEmail" class="form-label">College Email</label>
                     <input type="email" class="form-control" id="loginEmail" name="email" placeholder="you@mitsgwl.ac.in" required>
-                    <div class="invalid-feedback">Use your verified college email</div>
+                    <div class="invalid-feedback">Students should login with their @mitsgwl.ac.in email</div>
                 </div>
                 <div class="mb-3">
                     <label for="loginPassword" class="form-label">Password</label>

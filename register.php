@@ -17,7 +17,7 @@ require_once __DIR__ . '/includes/header.php';
                     <div class="col-md-6">
                         <label for="regEmail" class="form-label">College Email</label>
                         <input type="email" class="form-control" id="regEmail" name="email" placeholder="you@mitsgwl.ac.in" required>
-                        <div class="invalid-feedback">Please use your college email (@mitsgwl.ac.in)</div>
+                        <div class="invalid-feedback">Students must use their @mitsgwl.ac.in college email</div>
                     </div>
                 </div>
                 <div class="row g-3 mt-1">
@@ -27,14 +27,29 @@ require_once __DIR__ . '/includes/header.php';
                         <div class="invalid-feedback">Password must be at least 6 characters</div>
                     </div>
                     <div class="col-md-6">
-                        <label for="regRole" class="form-label">I am a</label>
+                        <label for="regRole" class="form-label">Account Purpose</label>
                         <select id="regRole" class="form-select" name="role" required>
-                            <option value="">Choose role</option>
-                            <option value="junior">Junior Student</option>
-                            <option value="senior">Senior Student</option>
+                            <option value="">Choose how you will use NearBy</option>
+                            <option value="junior">Find Accommodation (Student)</option>
+                            <option value="senior">Share Rooms / Services</option>
                         </select>
-                        <div class="invalid-feedback">Please select your role</div>
+                        <div class="invalid-feedback">Select how you plan to use NearBy</div>
                     </div>
+                </div>
+                <div class="mt-3">
+                    <label for="regUserCategory" class="form-label">I am registering as</label>
+                    <select id="regUserCategory" class="form-select" name="user_category" required>
+                        <option value="">Choose an option</option>
+                        <option value="student">Student</option>
+                        <option value="home_owner">Home Owner</option>
+                        <option value="room_owner">Room Owner</option>
+                        <option value="tiffin">Tiffin / Mess Provider</option>
+                        <option value="gas">Gas Provider</option>
+                        <option value="milk">Milk (Doodh) Provider</option>
+                        <option value="sabji">Vegetable (Sabji) Vendor</option>
+                        <option value="other_service">Other Local Service Provider</option>
+                    </select>
+                    <div class="invalid-feedback">Please tell us how you will use NearBy</div>
                 </div>
                 <button type="submit" class="btn btn-primary w-100 mt-4">Create Account</button>
             </form>
@@ -61,7 +76,7 @@ require_once __DIR__ . '/includes/header.php';
             <div class="border-top border-light pt-4 mt-2">
                 <h3 class="h5 fw-semibold mb-2">Need Help?</h3>
                 <p class="text-muted mb-1">Email: <a href="mailto:24cd3dsu4@mitsgwl.ac.in">24cd3dsu4@mitsgwl.ac.in</a></p>
-                <p class="text-muted mb-0">Phone: +91 7566868709</p>
+                <p class="text-muted mb-0">Phone: +91 751 000 1234</p>
             </div>
         </div>
     </div>

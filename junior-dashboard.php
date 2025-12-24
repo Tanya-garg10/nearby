@@ -26,18 +26,22 @@ require_once __DIR__ . '/includes/header.php';
                     <span class="filter-pill">Budget friendly</span>
                 </div>
             </div>
+            <button type="button" class="btn btn-primary mt-3 w-100" data-bs-toggle="modal" data-bs-target="#createPostModal">
+                <i class="bi bi-plus-circle me-2"></i>Create Post
+            </button>
         </div>
     </div>
 
     <form id="dashboardSearch" class="glass-card p-4 mb-4">
+        <input type="hidden" name="post_category" value="room">
         <div class="row g-3">
             <div class="col-md-4">
-                <label class="form-label">Search</label>
-                <input type="text" class="form-control" name="query" placeholder="Location or college name">
+                <label class="form-label" for="dashLocation">Location / Keyword</label>
+                <input type="text" class="form-control" id="dashLocation" name="location" placeholder="Civil Lines, DD Nagar...">
             </div>
             <div class="col-md-4">
-                <label class="form-label">Accommodation Type</label>
-                <select class="form-select" name="type">
+                <label class="form-label" for="dashAccommodation">Accommodation Type</label>
+                <select class="form-select" id="dashAccommodation" name="accommodation_type">
                     <option value="">Any</option>
                     <option value="PG">PG</option>
                     <option value="Flat">Flat</option>
@@ -46,8 +50,8 @@ require_once __DIR__ . '/includes/header.php';
                 </select>
             </div>
             <div class="col-md-4">
-                <label class="form-label">Max Rent (₹)</label>
-                <input type="number" class="form-control" name="max_rent" min="0" step="1000" placeholder="15000">
+                <label class="form-label" for="dashMaxPrice">Max Rent (₹)</label>
+                <input type="number" class="form-control" id="dashMaxPrice" name="max_price" min="0" step="500" placeholder="15000">
             </div>
         </div>
         <div class="d-flex justify-content-end gap-3 mt-4">
@@ -58,4 +62,5 @@ require_once __DIR__ . '/includes/header.php';
 
     <div id="searchResults" class="row g-4"></div>
 </div>
+<?php include __DIR__ . '/includes/create-post-modal.php'; ?>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

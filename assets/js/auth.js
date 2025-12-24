@@ -3,6 +3,40 @@ import { validateForm } from './forms.js';
 const loginForm = document.querySelector('#loginForm');
 const registerForm = document.querySelector('#registerForm');
 
+if (loginForm) {
+    const loginEmailInput = loginForm.querySelector('#loginEmail');
+    const loginRoleSelect = loginForm.querySelector('#loginRole');
+    if (loginEmailInput && loginRoleSelect) {
+        const syncLoginEmailRequirement = () => {
+            const requireDomain = loginRoleSelect.value === 'junior';
+            loginEmailInput.dataset.requireMitsEmail = requireDomain ? 'true' : 'false';
+            if (!requireDomain) {
+                loginEmailInput.setCustomValidity('');
+            }
+        };
+
+        syncLoginEmailRequirement();
+        loginRoleSelect.addEventListener('change', syncLoginEmailRequirement);
+    }
+}
+
+if (registerForm) {
+    const registerEmailInput = registerForm.querySelector('#regEmail');
+    const userCategorySelect = registerForm.querySelector('#regUserCategory');
+    if (registerEmailInput && userCategorySelect) {
+        const syncRegisterEmailRequirement = () => {
+            const requireDomain = userCategorySelect.value === 'student';
+            registerEmailInput.dataset.requireMitsEmail = requireDomain ? 'true' : 'false';
+            if (!requireDomain) {
+                registerEmailInput.setCustomValidity('');
+            }
+        };
+
+        syncRegisterEmailRequirement();
+        userCategorySelect.addEventListener('change', syncRegisterEmailRequirement);
+    }
+}
+
 const handleSubmit = (form, endpoint) => {
     if (!form) {
         return;
