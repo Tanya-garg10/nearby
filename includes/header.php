@@ -50,8 +50,8 @@ $pageScripts = $pageScripts ?? [];
                         <span class="navbar-text small text-white-50 me-2">Hi, <?= htmlspecialchars($currentUser['name']) ?></span>
                         <a class="btn btn-sm btn-outline-light" href="logout.php">Logout</a>
                     <?php else: ?>
-                        <a class="btn btn-sm btn-light" href="login.php">Login</a>
-                        <a class="btn btn-sm btn-primary" href="register.php">Register</a>
+                        <a class="btn btn-lg btn-light" href="login.php">Login</a>
+                        <a class="btn btn-lg btn-primary" href="register.php">Register</a>
                     <?php endif; ?>
                 </div>
             </div>

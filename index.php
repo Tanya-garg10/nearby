@@ -178,14 +178,14 @@ require_once __DIR__ . '/includes/header.php';
             <div class="glass-card featured-card h-100">
                 <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80" class="featured-image" alt="Bright twin sharing room">
                 <div class="p-4 d-flex flex-column gap-3">
-                    <span class="feature-tag"><i class="bi bi-patch-check-fill"></i>Verified · Near VIT</span>
+                    <span class="feature-tag"><i class="bi bi-patch-check-fill"></i>Verified · Near MITS</span>
                     <div>
-                        <h3 class="h5 fw-semibold mb-1">Sunlit sharing room</h3>
+                        <h3 class="h5 fw-semibold mb-1">Bank Colony</h3>
                         <p class="small text-muted mb-0">2 min walk to campus · Wi-Fi · Meals · Laundry</p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
                         <span class="fw-semibold text-success">₹7,500 / month</span>
-                        <span class="small text-muted"><i class="bi bi-geo-alt me-1"></i>Katpadi</span>
+                        <span class="small text-muted"><i class="bi bi-geo-alt me-1"></i>Gwalior</span>
                     </div>
                 </div>
             </div>
@@ -196,12 +196,12 @@ require_once __DIR__ . '/includes/header.php';
                 <div class="p-4 d-flex flex-column gap-3">
                     <span class="feature-tag"><i class="bi bi-lightning-charge"></i>Fast Wi-Fi · AC</span>
                     <div>
-                        <h3 class="h5 fw-semibold mb-1">Studio with study zone</h3>
+                        <h3 class="h5 fw-semibold mb-1">Gole Ka Mandir</h3>
                         <p class="small text-muted mb-0">Dedicated study desk · 24x7 power backup · Parking</p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
                         <span class="fw-semibold text-success">₹11,200 / month</span>
-                        <span class="small text-muted"><i class="bi bi-geo-alt me-1"></i>Baner</span>
+                        <span class="small text-muted"><i class="bi bi-geo-alt me-1"></i>Gwalior</span>
                     </div>
                 </div>
             </div>
@@ -212,12 +212,12 @@ require_once __DIR__ . '/includes/header.php';
                 <div class="p-4 d-flex flex-column gap-3">
                     <span class="feature-tag"><i class="bi bi-people"></i>Community Living</span>
                     <div>
-                        <h3 class="h5 fw-semibold mb-1">Co-living loft</h3>
+                        <h3 class="h5 fw-semibold mb-1">Krishna Nagar</h3>
                         <p class="small text-muted mb-0">Shared lounge · Gym access · Evening mentoring circles</p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
                         <span class="fw-semibold text-success">₹9,300 / month</span>
-                        <span class="small text-muted"><i class="bi bi-geo-alt me-1"></i>Koramangala</span>
+                        <span class="small text-muted"><i class="bi bi-geo-alt me-1"></i>Gwalior</span>
                     </div>
                 </div>
             </div>
@@ -264,7 +264,7 @@ require_once __DIR__ . '/includes/header.php';
                         <p class="fst-italic text-muted mb-3">“Within a day I found a furnished room near campus and the senior host helped me figure out the best tiffin services. NearBy made the move-in stress free.”</p>
                         <div>
                             <p class="fw-semibold mb-0">Aditi Sharma</p>
-                            <p class="small text-muted">First-year B.Tech · Pune University</p>
+                            <p class="small text-muted">First-year B.Tech · Madhav Institute Of Technology And Science Gwalior</p>
                         </div>
                     </div>
                 </div>
