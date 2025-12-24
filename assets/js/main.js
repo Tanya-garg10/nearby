@@ -23,6 +23,25 @@
     };
 
     const showMessage = (message, type = 'success') => {
+        const sweetAlert = window.Swal;
+        if (sweetAlert) {
+            const iconMap = {success: 'success', danger: 'error', warning: 'warning', info: 'info'};
+            const icon = iconMap[type] || 'info';
+            const titleMap = {
+                success: 'Success',
+                error: 'Oops!',
+                warning: 'Please check',
+                info: 'Heads up'
+            };
+            sweetAlert.fire({
+                icon,
+                title: titleMap[icon] || 'Notice',
+                text: message,
+                confirmButtonColor: '#0d6efd'
+            });
+            return;
+        }
+
         const target = document.querySelector('[data-app-alerts]') || document.querySelector('.container');
         if (!target) {
             return;

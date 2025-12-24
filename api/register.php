@@ -31,6 +31,12 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL) || !str_contains($email, '@')) {
     exit;
 }
 
+$allowedDomain = '@mitsgwl.ac.in';
+if (!str_ends_with(strtolower($email), $allowedDomain)) {
+    echo json_encode(['success' => false, 'message' => 'Use your @mitsgwl.ac.in college email']);
+    exit;
+}
+
 if (!in_array($role, ['junior', 'senior'], true)) {
     echo json_encode(['success' => false, 'message' => 'Invalid role selected']);
     exit;

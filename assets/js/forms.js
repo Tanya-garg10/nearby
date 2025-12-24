@@ -4,9 +4,10 @@ export const validateForm = (form) => {
 
     elements.forEach(el => {
         if (el.type === 'email') {
-            const isEdu = el.value.endsWith('.edu');
-            if (!isEdu) {
-                el.setCustomValidity('Use your college email');
+            const allowedDomain = '@mitsgwl.ac.in';
+            const isCollegeEmail = el.value.toLowerCase().endsWith(allowedDomain);
+            if (!isCollegeEmail) {
+                el.setCustomValidity('Use your @mitsgwl.ac.in college email');
             } else {
                 el.setCustomValidity('');
             }

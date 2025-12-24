@@ -16,8 +16,8 @@ require_once __DIR__ . '/includes/header.php';
                     </div>
                     <div class="col-md-6">
                         <label for="regEmail" class="form-label">College Email</label>
-                        <input type="email" class="form-control" id="regEmail" name="email" placeholder="you@college.edu" required>
-                        <div class="invalid-feedback">Please use your college email (.edu)</div>
+                        <input type="email" class="form-control" id="regEmail" name="email" placeholder="you@mitsgwl.ac.in" required>
+                        <div class="invalid-feedback">Please use your college email (@mitsgwl.ac.in)</div>
                     </div>
                 </div>
                 <div class="row g-3 mt-1">
