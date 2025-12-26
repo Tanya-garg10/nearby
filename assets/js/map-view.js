@@ -112,11 +112,12 @@ function injectScript(src) {
 function setupMap() {
     state.map = L.map(state.canvas, {
         zoomControl: false,
-        maxZoom: 18
+        maxZoom: 18,
+        attributionControl: false
     }).setView(MAP_CENTER, MAP_ZOOM);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
+        attribution: ''
     }).addTo(state.map);
 
     L.control.zoom({ position: 'bottomright' }).addTo(state.map);
