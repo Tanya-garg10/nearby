@@ -1,5 +1,7 @@
 <?php
 $pageTitle = 'NearBy | Student Housing Simplified';
+$pageScripts = ['assets/js/chatbot.js'];
+$enableChatbot = true;
 require_once __DIR__ . '/includes/header.php';
 ?>
 <section class="hero-slider position-relative mb-5">

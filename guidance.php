@@ -1,5 +1,7 @@
 <?php
 $pageTitle = 'Local Guidance | NearBy';
+$pageScripts = ['assets/js/chatbot.js'];
+$enableChatbot = true;
 require_once __DIR__ . '/includes/header.php';
 ?>
 <section class="mb-5">

@@ -8,7 +8,8 @@ if (($_SESSION['user']['role'] ?? null) !== 'senior') {
 }
 
 $pageTitle = 'Senior Dashboard | NearBy';
-$pageScripts = ['assets/js/search.js'];
+$pageScripts = ['assets/js/search.js', 'assets/js/chatbot.js'];
+$enableChatbot = true;
 require_once __DIR__ . '/includes/header.php';
 ?>
 <div data-app-alerts>

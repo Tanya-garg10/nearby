@@ -19,3 +19,11 @@ if ($isLocal) {
 }
 
 define('DB_CHARSET', 'utf8mb4');
+
+$geminiKey = getenv('GEMINI_API_KEY');
+if (!$geminiKey) {
+	$geminiKey = 'AIzaSyBcnWU0iSsvXH2kgIT9guWkPWI-FrFTwS0';
+}
+
+define('GEMINI_API_KEY', $geminiKey);
+define('GEMINI_MODEL', getenv('GEMINI_MODEL') ?: 'models/gemini-2.0-flash-exp');

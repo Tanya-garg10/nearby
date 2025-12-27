@@ -63,3 +63,13 @@ CREATE TABLE IF NOT EXISTS contact_requests (
     CONSTRAINT fk_contact_accommodation FOREIGN KEY (accommodation_id) REFERENCES accommodations(id) ON DELETE CASCADE,
     CONSTRAINT fk_contact_requester FOREIGN KEY (requester_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS chatbot_messages (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    sender ENUM('user', 'bot') NOT NULL,
+    message TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_chatbot_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_chatbot_user_time (user_id, created_at)
+) ENGINE=InnoDB;
