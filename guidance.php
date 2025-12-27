@@ -1,6 +1,6 @@
 <?php
 $pageTitle = 'Local Guidance | NearBy';
-$pageScripts = ['assets/js/chat-assistant.js'];
+$pageScripts = ['assets/js/message.js'];
 $enableChatbot = true;
 require_once __DIR__ . '/includes/header.php';
 ?>

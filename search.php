@@ -1,6 +1,6 @@
 <?php
 $pageTitle = 'Find Accommodation | NearBy';
-$pageScripts = ['assets/js/search.js', 'assets/js/map-view.js', 'assets/js/chat-assistant.js'];
+$pageScripts = ['assets/js/search.js', 'assets/js/map-view.js', 'assets/js/message.js'];
 $enableChatbot = true;
 require_once __DIR__ . '/includes/header.php';
 ?>
