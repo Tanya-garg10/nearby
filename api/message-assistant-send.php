@@ -158,25 +158,25 @@ try {
 
     if ($responseBody === false) {
         error_log('[Gemini] cURL failed: ' . ($curlError ?: 'unknown error'));
-        $respond(502, ['success' => false, 'message' => 'Gemini API failed', 'details' => $curlError ?: 'Unknown cURL error']);
+        $respond(502, ['success' => false, 'message' => 'Sorry, I\'m having trouble connecting to my brain. Please try again later.']);
     }
 
     $responseData = json_decode($responseBody, true);
     if ($responseData === null) {
         error_log('[Gemini] Invalid JSON response: ' . $responseBody);
-        $respond(502, ['success' => false, 'message' => 'Gemini API returned invalid JSON']);
+        $respond(502, ['success' => false, 'message' => 'Sorry, I\'m having trouble processing the response. Please try again later.']);
     }
 
     if ($httpCode >= 400) {
         $errorMessage = $responseData['error']['message'] ?? 'Gemini API failed';
         error_log('[Gemini] HTTP ' . $httpCode . ': ' . $errorMessage);
-        $respond($httpCode, ['success' => false, 'message' => 'Gemini API failed', 'details' => $errorMessage]);
+        $respond(502, ['success' => false, 'message' => 'Sorry, I\'m having trouble responding right now. Please try again later.']);
     }
 
     $botReply = $responseData['candidates'][0]['content']['parts'][0]['text'] ?? '';
     $botReply = trim($botReply);
     if ($botReply === '') {
-        $respond(502, ['success' => false, 'message' => 'Gemini did not return a reply']);
+        $respond(502, ['success' => false, 'message' => 'Sorry, I couldn\'t generate a response. Please try again.']);
     }
 
     $insertSql = 'INSERT INTO chatbot_messages (user_id, sender, message) VALUES (?, ?, ?)';
