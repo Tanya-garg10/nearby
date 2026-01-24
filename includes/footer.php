@@ -18,6 +18,7 @@
                         <li><span>24×7 chat support</span></li>
                         <li><a href="mailto:support@nearbyhousing.com">Send us an email</a></li>
                         <li><a href="guidance.php">Housing guidance</a></li>
+                        <li><a href="includes/feedback.php">Give Feedback</a></li>
                     </ul>
                 </div>
                 <div class="col-sm-6 col-lg-2">
