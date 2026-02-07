@@ -1,14 +1,25 @@
 <?php
 header('Content-Type: application/json');
 require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../includes/helpers/csrf.php';
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+startSecureSession();
+
+// Validate CSRF token
+requireCSRFToken();
 
 if (($_SESSION['user']['role'] ?? '') !== 'senior') {
     http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'Only senior students can post accommodations']);
+    exit;
+}
+
+// Additional authorization: Only owners can create accommodations
+$userType = $_SESSION['user']['user_type'] ?? 'student';
+$allowedOwnerTypes = ['home_owner', 'room_owner'];
+if (!in_array($userType, $allowedOwnerTypes)) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Only property owners can create accommodation listings']);
     exit;
 }
 

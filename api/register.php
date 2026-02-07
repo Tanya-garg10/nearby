@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
 require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../includes/helpers/csrf.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -8,13 +9,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+// Validate CSRF token
+requireCSRFToken();
+
 $raw = file_get_contents('php://input');
 $data = json_decode($raw, true);
 if (!is_array($data) || empty($data)) {
     $data = $_POST;
 }
-
-$conn = nearby_db_connect();
 
 $name = trim($data['name'] ?? '');
 $email = trim($data['email'] ?? '');
@@ -22,15 +24,47 @@ $password = $data['password'] ?? '';
 $role = $data['role'] ?? '';
 $userCategory = trim($data['user_category'] ?? '');
 
-if ($name === '' || $email === '' || $password === '' || $role === '' || $userCategory === '') {
-    echo json_encode(['success' => false, 'message' => 'All fields are required']);
+// Validate name
+$nameValidation = validateText($name, 2, 100);
+if (!$nameValidation['valid']) {
+    echo json_encode(['success' => false, 'message' => $nameValidation['error']]);
     exit;
 }
+$name = $nameValidation['text'];
 
-if (!filter_var($email, FILTER_VALIDATE_EMAIL) || !str_contains($email, '@')) {
-    echo json_encode(['success' => false, 'message' => 'Enter a valid email address']);
+// Validate email
+$emailValidation = validateEmail($email);
+if (!$emailValidation['valid']) {
+    echo json_encode(['success' => false, 'message' => $emailValidation['error']]);
     exit;
 }
+$email = $emailValidation['email'];
+
+// Validate password
+$passwordValidation = validatePassword($password);
+if (!$passwordValidation['valid']) {
+    echo json_encode(['success' => false, 'message' => $passwordValidation['error']]);
+    exit;
+}
+$password = $passwordValidation['password'];
+
+// Validate user category
+$allowedCategories = ['student', 'home_owner', 'room_owner', 'tiffin', 'gas', 'milk', 'sabji', 'other_service'];
+$categoryValidation = validateEnum($userCategory, $allowedCategories, 'user category');
+if (!$categoryValidation['valid']) {
+    echo json_encode(['success' => false, 'message' => $categoryValidation['error']]);
+    exit;
+}
+$userCategory = $categoryValidation['value'];
+
+// Validate role
+$allowedRoles = ['junior', 'senior'];
+$roleValidation = validateEnum($role, $allowedRoles, 'role');
+if (!$roleValidation['valid']) {
+    echo json_encode(['success' => false, 'message' => $roleValidation['error']]);
+    exit;
+}
+$role = $roleValidation['value'];
 
 $categoryMap = [
     'student' => 'student',
@@ -45,7 +79,7 @@ $categoryMap = [
 
 $userType = $categoryMap[strtolower($userCategory)] ?? null;
 if ($userType === null) {
-    echo json_encode(['success' => false, 'message' => 'Select a valid user category']);
+    echo json_encode(['success' => false, 'message' => 'Invalid user category']);
     exit;
 }
 
@@ -60,10 +94,7 @@ if ($userType !== 'student') {
     $role = 'senior';
 }
 
-if (!in_array($role, ['junior', 'senior'], true)) {
-    echo json_encode(['success' => false, 'message' => 'Invalid role selected']);
-    exit;
-}
+$conn = nearby_db_connect();
 
 $emailSafe = mysqli_real_escape_string($conn, $emailLower);
 

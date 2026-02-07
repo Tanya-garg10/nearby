@@ -1,3 +1,5 @@
+import { escapeHtml } from './ui.js';
+
 (() => {
     const body = document.body;
     if (!body) {
@@ -15,7 +17,7 @@
         const wrapper = document.createElement('div');
         wrapper.innerHTML = `
             <div class="alert alert-${type} alert-glass alert-dismissible fade show" role="alert">
-                ${message}
+                ${escapeHtml(message)}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         `;
@@ -56,10 +58,29 @@
 
     const fetchJSON = async (url, options = {}) => {
         const defaultHeaders = {'Accept': 'application/json'};
+        
+        // Get CSRF token from meta tag
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        
         options.headers = options.headers ? {...defaultHeaders, ...options.headers} : defaultHeaders;
+        
+        // Add CSRF token to headers for POST requests
+        if (csrfToken && (options.method === 'POST' || options.method === 'PUT' || options.method === 'DELETE')) {
+            options.headers['X-CSRF-Token'] = csrfToken;
+        }
+        
         if (options.body && !(options.body instanceof FormData)) {
             options.headers['Content-Type'] = 'application/json';
+            // Add CSRF token to JSON body if not already present
+            if (csrfToken && typeof options.body === 'object' && !options.body.csrf_token) {
+                options.body.csrf_token = csrfToken;
+            }
             options.body = JSON.stringify(options.body);
+        } else if (options.body instanceof FormData && csrfToken) {
+            // Add CSRF token to FormData if not already present
+            if (!options.body.has('csrf_token')) {
+                options.body.append('csrf_token', csrfToken);
+            }
         }
 
         const response = await fetch(url, options);
@@ -93,4 +114,32 @@
         fetchJSON,
         showMessage
     };
+
+    // Back to Top Button Functionality
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    if (backToTopBtn) {
+        // Show/hide button based on scroll position
+        const toggleBackToTopBtn = () => {
+            if (window.pageYOffset > 300) { // Show after scrolling 300px
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        };
+
+        // Smooth scroll to top
+        const scrollToTop = () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        };
+
+        // Event listeners
+        window.addEventListener('scroll', toggleBackToTopBtn);
+        backToTopBtn.addEventListener('click', scrollToTop);
+
+        // Initial check
+        toggleBackToTopBtn();
+    }
 })();
